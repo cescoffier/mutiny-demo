@@ -21,12 +21,35 @@ public class SupesResource {
         return "hello";
     }
 
-
+    @GET
+    @Path("/greeting")
+    public Uni<String> greeting() {
+        return Uni.createFrom().item("greeting");
+    }
 
     // Hero and Villain methods
+    @GET
+    @Path("/hero")
+    public Uni<Hero> hero() {
+        return Hero.findRandom();
+    }
 
+    @GET
+    @Path("/villain")
+    public Uni<Villain> villain() {
+        return Villain.findRandom();
+    }
 
     // Stream of heroes
+    @GET
+    @Path("/heroes")
+    @Produces(MediaType.SERVER_SENT_EVENTS)
+    @SseElementType(MediaType.APPLICATION_JSON)
+    public Multi<Hero> stream() {
+        return Multi.createFrom().ticks().every(Duration.ofSeconds(1))
+                .onItem().produceUni(x -> hero()).merge();
+    }
+
 
 
 

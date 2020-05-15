@@ -15,6 +15,10 @@ public class Hero extends ReactivePanacheMongoEntity {
 
     public static Uni<Hero> findRandom() {
         Random random = new Random();
-        return Uni.createFrom().nullItem();
+        return Hero.count()
+                .map(l -> random.nextInt(l.intValue()))
+                .flatMap(index -> {
+                    return Hero.findAll().page(index, 1).firstResult();
+                });
     }
 }

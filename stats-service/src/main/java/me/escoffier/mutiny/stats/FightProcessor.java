@@ -16,7 +16,11 @@ public class FightProcessor {
     @Outgoing("stats")
     @Broadcast
     public Multi<Stats> process(Multi<Fight> fights) {
-       return Multi.createFrom().empty();
+       return fights
+               .onItem().scan(
+                       Stats::new,
+                       this::compute
+       );
     }
 
     private Stats compute(Stats s, Fight f) {

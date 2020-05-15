@@ -21,11 +21,18 @@ public class FightService {
     public Uni<Fight> fight() {
 
         // Retrieve hero and villain
+        Uni<Hero> hero = supes.getRandomHero()
+                .ifNoItem().after(Duration.ofMillis(500)).fail()
+                .onFailure().recoverWithItem(Hero.FALLBACK);
+
+        Uni<Villain> villain = supes.getRandomVillain()
+                .ifNoItem().after(Duration.ofMillis(500)).fail()
+                .onFailure().recoverWithItem(Villain.FALLBACK);
 
         // Combine both and call computeFightOutcome
+        return Uni.combine().all().unis(hero, villain)
+                .combinedWith(this::computeFightOutcome);
 
-
-        return Uni.createFrom().nullItem();
     }
 
     //----------------------------------
