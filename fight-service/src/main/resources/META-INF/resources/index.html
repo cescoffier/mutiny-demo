@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>Quarkus Mutiny Demo</title>
+
+    <style>
+        .center-block {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .bang {
+            font-family: 'Bangers', cursive;
+        }
+
+        button.bang {
+            font-size: xx-large;
+        }
+
+        .hero-winner {
+            box-shadow:
+                    inset 0 0 5px #fff,
+                    inset 20px 0 25px #77b4f0,
+                    inset -20px 0 30px #5fc3d7,
+                    inset 20px 0 50px #4a54ff,
+                    inset -20px 0 50px #0ff,
+                    0 0 25px #fff,
+                    -10px 0 25px #4a54ff,
+                    10px 0 25px #0ff;
+        }
+
+        .villain-winner {
+            box-shadow:
+                    inset 0 0 5px #fff,
+                    inset 20px 0 25px #F078C2,
+                    inset -20px 0 30px #D73B46,
+                    inset 20px 0 50px #FF5B68,
+                    inset -20px 0 50px #FF5A71,
+                    0 0 25px #fff,
+                    -10px 0 25px #FF5B68,
+                    10px 0 25px #FF5B68;
+        }
+
+        .fighter {
+            padding: 2em;
+        }
+    </style>
+
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
+</head>
+<body>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <h1 class="bang text-center col">Fight!</h1>
+    </div>
+
+    <hr/>
+    <p class="col lead">
+        When clicking on the <em class="bang">fight!</em>&nbsp; button, it calls the <code>fight-service</code> using HTTP, which calls the <code>supes-service</code>
+        to retrieve the fighters.
+        Then, it computes the outcome of the fight, and sends the answer to this page.
+    </p>
+    <hr/>
+
+    <div class="container">
+        <div class="row">
+            <div class="col text-center">
+                <button id="fight-button" class="bang btn btn-dark btn-lg">fight!</button>
+            </div>
+        </div>
+    </div>
+
+    <br/>
+
+    <div class="container">
+        <div id="fight-result" class="row">
+            <div class="col-sm fighter fight-hero">
+                <h3 class="text-center bang" id="hero-name"></h3>
+                <img class="center-block rounded-circle" id="hero-image">
+            </div>
+            <div class="col-sm">
+                <img class="center-block rounded-circle" style="margin-top: 5em" src="vs.png">
+            </div>
+            <div class="col-sm fighter fight-villain">
+                <h3 class="text-center bang" id="villain-name"></h3>
+                <img class="center-block rounded-circle" id="villain-image">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+
+<script
+        src="https://code.jquery.com/jquery-3.5.0.min.js"
+        integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ="
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<script>
+
+    $(document).ready(function () {
+        $("#fight-button").click(fight);
+    });
+
+    function fight() {
+        const button = $("#fight-button");
+        button.prop('disabled', true);
+        $.getJSON("/fight").done((res) => {
+            console.log(res);
+            const hero = res.hero;
+            const hero_image = hero.image;
+            const villain = res.villain;
+            const villain_image = villain.image;
+            const winner = res.winner;
+            const heroHasWon = res.winner === hero.name;
+
+            $("#hero-name").html(hero.name);
+            $("#villain-name").html(villain.name);
+            $("#villain-image").attr("src", villain_image);
+            $("#hero-image").attr("src", hero_image);
+
+            if (heroHasWon) {
+                $(".fight-hero").addClass("hero-winner");
+                $(".fight-villain").removeClass("villain-winner")
+
+            } else {
+                $(".fight-villain").addClass("villain-winner");
+                $(".fight-hero").removeClass("hero-winner");
+            }
+
+            button.prop('disabled', false);
+        });
+
+    }
+
+</script>
+</html>
