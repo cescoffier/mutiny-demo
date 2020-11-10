@@ -11,8 +11,8 @@
     <packaging>pom</packaging>
 
     <properties>
-        <quarkus.version>1.4.1.Final</quarkus.version>
-        <quarkus-plugin.version>1.4.1.Final</quarkus-plugin.version>
+        <quarkus.version>1.9.2.Final</quarkus.version>
+        <quarkus-plugin.version>1.9.2.Final</quarkus-plugin.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
