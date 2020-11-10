@@ -23,15 +23,15 @@ public class FightResource {
         return fights.fight();
     }
 
+
     @GET
     @Path("/stream")
     @Produces(MediaType.SERVER_SENT_EVENTS)
     @SseElementType(MediaType.APPLICATION_JSON)
-    public Multi<Fight> fights() {
+    public Multi<Fight> stream() {
         Multi<Long> ticks = Multi.createFrom().ticks()
-                .every(Duration.ofSeconds(1));
+            .every(Duration.ofSeconds(1));
         return ticks
-                .onItem().produceUni(x -> fight()).concatenate();
+                    .onItem().transformToUniAndMerge(x -> fight());
     }
-
 }

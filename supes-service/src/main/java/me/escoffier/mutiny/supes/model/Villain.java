@@ -15,13 +15,11 @@ public class Villain extends ReactivePanacheMongoEntity {
 
     public static Uni<Villain> findRandom() {
         Random random = new Random();
-
         return Villain.count()
-                .onItem().apply(l -> random.nextInt(l.intValue()))
-                .onItem().produceUni(index -> {
+                .onItem().transform(l -> random.nextInt(l.intValue()))
+                .onItem().transformToUni(index -> {
                     return Villain.findAll().page(index, 1).firstResult();
-        });
-
+                });
     }
 
 

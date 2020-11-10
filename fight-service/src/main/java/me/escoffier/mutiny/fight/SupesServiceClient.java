@@ -11,15 +11,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 @RegisterRestClient(configKey = "supes-service")
+@Produces(MediaType.APPLICATION_JSON)
 public interface SupesServiceClient {
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     @Path("/hero")
     Uni<Hero> getRandomHero();
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     @Path("/villain")
     Uni<Villain> getRandomVillain();
 
